@@ -1,0 +1,134 @@
+html, body { 
+	height:100%;
+	display: flex;
+	flex-direction: column;
+}
+
+body{
+	margin: 0;
+	padding: 0;
+}
+
+body > * {
+  flex-shrink: 0;
+}
+
+/*https://pixabay.com/illustrations/pattern-template-banner-background-2721690/*/
+#banner{
+	height: 20vh;
+	
+	background-image: url("../img/banner1.jpg");
+	background-repeat: no-repeat;
+	background-size: 100%, auto;
+	background-attachment: fixed;
+}
+
+#menu{
+	padding-top: 10px;
+	background-color: #4d94ff;
+	border-top: 2px solid #444;
+	border-bottom: 2px solid #444;
+	padding-bottom: 6px;
+}
+
+#searchBar{
+	width: 80%;
+	padding-left: 13%;
+}
+
+#buttonBar{
+	padding-left: 12%;
+}
+
+#content{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	flex-grow: 1;
+	
+	/*darken image*/
+	background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
+				url("../img/bg-blue.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+	
+	/*make it more "blue"*/
+	filter: hue-rotate(30deg);
+}
+
+/*https://www.w3schools.com/colors/colors_picker.asp*/
+#contentBox{
+	width: 80%;
+	margin: 0 auto;
+	
+	background-color: rgba(255, 255, 255, 0.3);
+	padding-bottom: 6px;
+}
+
+#footer{
+	background-color: #444;
+	text-align: center;
+	font-style: italic;
+	padding-top: 6px;
+	padding-bottom: 6px;
+}
+
+#returnAssetBtn, #borrowAssetBtn {
+	display: none;
+}
+
+.assetWidth {
+	width: 250px;
+	display: inline-block;
+	font-weight: bold;
+}
+
+.form-group {
+	margin-bottom: .5rem;
+}
+
+form{
+	padding-top: .5rem;
+}
+
+hr {
+	border: none;
+	background-color: #444;
+	color: #444;
+	height: 1px;
+	width: 80%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+a {
+    text-decoration:none;
+}
+
+td[scope] {
+	font-weight: bold;
+}
+
+select {
+	margin-right: 3px;
+}
+
+
+
+#errorBackground{
+	background-image: url("../img/bg-silver.jpg");
+	background-size: cover;
+}
+
+.errorContent{
+	margin-top: 100px;
+	background-image: url("../img/bg-violet.jpg");
+}
+
+.errorContent > p{
+	font-size: 24px;
+}
+
+/*Bootstrap Confirmation plugin*/
+.popover-header{
+	text-align: center;
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+ <head>
+	 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" 
+	 integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	 <meta charset="UTF-8">
+	 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	 <link th:href="@{/css/mystyle.css}" href="mystyle.css" type="text/css" rel="stylesheet">
+     <title> Error</title>
+ </head>
+ <body id="errorBackground">
+     <div class="container errorContent">
+       <h1>O nie...</h1>
+       <br>
+       <p>Wygląda na to, że mamy problem ze stroną z której chciałeś skorzystać.</p>
+       <br>
+       <p th:text="${'Kod błędu to ' + status 
+       + '; ' + error + '.'}"></p>
+       <p th:text="${'Dodatkowe informacje: ' + message + '.'}"></p>
+       <a class="btn btn-primary" href="/assets">Powrót do strony głównej</a>
+     </div>
+ </body>
+</html>
