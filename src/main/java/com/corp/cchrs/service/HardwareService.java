@@ -65,6 +65,7 @@ public class HardwareService {
 		return getHardwareByType(type).getHardwareGroup();
 	}
 
+	// the type must be in format of enum, use Utils if needed.
 	public Hardware getHardwareByType(String type) {
 		return getAllHardwares().stream().filter(n -> n.getType().equals(type)).findAny().orElseThrow();
 	}

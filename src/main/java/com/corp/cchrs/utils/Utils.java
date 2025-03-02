@@ -44,7 +44,7 @@ public class Utils {
 		
 		return sn;
 	}
-
+	//https://stackoverflow.com/questions/13659217/where-is-the-documentation-for-the-values-method-of-enum
 	/**
 	 * Values have lowercase letters and all underlines are replaced with space character.
 	 * @param obj array. You must use values() on your enum class.

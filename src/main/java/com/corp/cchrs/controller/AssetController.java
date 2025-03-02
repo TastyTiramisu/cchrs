@@ -56,6 +56,9 @@ public class AssetController {
 		return "redirect:/assets";
 	}
 
+	//https://www.quora.com/Why-is-it-required-to-add-CSS-and-JS-libraries-for-Bootstrap
+	//https://getbootstrap.com/docs/4.3/getting-started/introduction/
+	// https://www.baeldung.com/spring-requestparam-vs-pathvariable
 	@GetMapping("/assets")
 	public String getFilteredAssetsTable(Model model, @RequestParam(required = false) Integer group,
 			@RequestParam(required = false) Integer type) throws Exception {
@@ -74,6 +77,7 @@ public class AssetController {
 		return "showassets";
 	}
 	
+	//filter assets by person and, of course, by hardware type and group.
 	@GetMapping("/my/assets")
 	public String getLoggedInPersonsAssets(Model model, @RequestParam(required = false) Integer group,
 			@RequestParam(required = false) Integer type) throws Exception {
@@ -81,7 +85,7 @@ public class AssetController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Person person = pService.getPersonByEmail(auth.getName());
 		
-		//names of types for search bar.
+		//names of types for our custom search bar.
 		model.addAttribute("hardwareGroups", Utils.getFormattedNames(EHardwareGroup.values()));
 		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
 		model.addAttribute("hardwareType1", Utils.getFormattedNames(hService.getTypesByGroup(1)));
@@ -97,10 +101,12 @@ public class AssetController {
 		return "showassets";
 	}
 	
+	//filter assets by person and, of course, by hardware type and group.
 	@GetMapping("/assets/person/{id}")
 	public String getPersonsAssets(Model model, @Valid @PathVariable Integer id,
 			@RequestParam(required = false) Integer group, @RequestParam(required = false) Integer type) throws Exception {
 		
+		//names of types for our custom search bar.
 		model.addAttribute("hardwareGroups", Utils.getFormattedNames(EHardwareGroup.values()));
 		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
 		model.addAttribute("hardwareType1", Utils.getFormattedNames(hService.getTypesByGroup(1)));
@@ -133,12 +139,11 @@ public class AssetController {
 		
 		return "showdeletedassets";
 	}
-
 	
 	@GetMapping("/asset/add")
 	public String createAsset(Model model) {
 		model.addAttribute("asset", new Asset());
-		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
+		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes())); //if 0 throw Exception (is this necessary?), if null
 		model.addAttribute("people", pService.getPeople());
 		model.addAttribute("rooms", rService.getRooms());
 		model.addAttribute("assetHistory", new AssetHistory());
@@ -173,6 +178,7 @@ public class AssetController {
 		return "redirect:/assets";
 	}
 
+	//should only change boolean deleted as true.
 	@GetMapping("asset/delete/{id}")
 	public String deleteAsset(@Valid @PathVariable Integer id) {
 		service.deleteAsset(id);

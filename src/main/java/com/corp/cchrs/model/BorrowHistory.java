@@ -26,13 +26,13 @@ public class BorrowHistory {
 	private String desc = "";
 	private LocalDate returnBackDate;
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="asset_id")
+    @JoinColumn(name="asset_id")//, nullable=false
 	private Asset asset;
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="person_id")
+    @JoinColumn(name="person_id")//, nullable=false
 	private Person person;
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="room_id")
+    @JoinColumn(name="room_id")//, nullable=false
 	private Room room;
 	
 	public Integer getId() {

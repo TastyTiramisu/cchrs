@@ -24,8 +24,9 @@ public class Hardware {
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private EHardwareType type;
+	//why FetchType.LAZY - @ManyToOne associations use the FetchType.EAGER strategy, which can lead to N+1 query issues or fetching more data than necessary.
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="hardware_group_id")
+    @JoinColumn(name="hardware_group_id")//, nullable=false
 	private HardwareGroup hardwareGroup;
 	
 	public Integer getId() {

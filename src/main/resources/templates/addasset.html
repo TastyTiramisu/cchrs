@@ -64,7 +64,7 @@
 						<label for="room">Numer pokoju: </label>
 						<select class="custom-select" id="room" name="room" required>
 							<option value="" selected>Wybierz pokój...</option>
-							<option th:each="room : ${rooms}" th:value="${room.id}" th:text="${'Pokój nr. ' + room.number}"></option>
+							<option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.getType() == 'STORAGE'} ? ${'Pokój nr. ' + room.number} + ' - Magazyn' : ${'Pokój nr. ' + room.number} "></option>
 						</select>
 	  				</div>
   				</div>

@@ -59,10 +59,10 @@ public class Starter implements ApplicationRunner {
 	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		loadData();
+		//loadData();
 	}
 	
-	//@SuppressWarnings("unused")
+	@SuppressWarnings("unused")
 	private void loadData(){
 		addHardware();
 		addAssets();
@@ -89,6 +89,7 @@ public class Starter implements ApplicationRunner {
 
 	@SuppressWarnings("unused")
 	private void printAllHardwareTypes() {
+		//th:each="asset : ${assets}"
 		for(EHardwareType value : EHardwareType.values())
 			System.out.println(value.name().replace('_', ' ').toLowerCase());
 	}
@@ -349,7 +350,7 @@ public class Starter implements ApplicationRunner {
 		aRepo.save(asset);
 	}
 
-	//all assets right after creating have 1 record in history: who, where, borrowDate but not when item should be returned.
+	//cały sprzęt ma przy jego dodawaniu 1 wpis w historii: kto, gdzie, borrowDate ale nie do kiedy.
 	private void addBorrowHistory() {
 		//1
 		BorrowHistory bHistory = new BorrowHistory();
