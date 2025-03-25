@@ -1,6 +1,6 @@
 package com.corp.cchrs.controller;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.validation.Valid;
 
@@ -41,7 +41,7 @@ public class BorrowHistoryController {
 		final String role = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
 		final String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		BorrowHistory borrowHistory = service.getLastRecordInHistoryOfAsset(id);
-		LocalDate currentReturnBackDate = borrowHistory.getReturnBackDate();
+		LocalDateTime currentReturnBackDate = borrowHistory.getReturnBackDate();
 
 		if(role.equals("[ADMIN]") || username.equals(borrowHistory.getPerson().getEmail()))
 			if(returned == true && currentReturnBackDate == null) {
@@ -51,7 +51,7 @@ public class BorrowHistoryController {
 					model.addAttribute("message", "Asset was deleted");
 					return "error";
 				}
-				borrowHistory.setReturnBackDate(LocalDate.now());
+				borrowHistory.setReturnBackDate(LocalDateTime.now());
 				service.saveBorrowHistory(borrowHistory);
 			}
 		model.addAttribute("assetDetails", borrowHistory);
@@ -87,7 +87,7 @@ public class BorrowHistoryController {
 		borrowHistory.setAsset(aService.getAsset(id));
 		borrowHistory.setPerson(person);
 		borrowHistory.setRoom(room);
-		final LocalDate borrowUntil = borrowHistory.getBorrowUntil();
+		final LocalDateTime borrowUntil = borrowHistory.getBorrowUntil();
 		if (borrowUntil != null) borrowHistory.setBorrowUntil(borrowUntil);
 		service.saveBorrowHistory(borrowHistory);
 		

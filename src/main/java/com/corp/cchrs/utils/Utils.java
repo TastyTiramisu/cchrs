@@ -1,20 +1,19 @@
 package com.corp.cchrs.utils;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
 public class Utils {
-	private final static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private final static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
 	
-	//used in AssetHistory
-	public static LocalDate dateConventer(String date) {
-		return LocalDate.parse(date, dateTimeFormatter);
+	public static LocalDateTime dateConventer(String date) {
+		return LocalDateTime.parse(date, dateTimeFormatter);
 	}
 	
-	public static String dateConventer(LocalDate date) {
+	public static String dateConventer(LocalDateTime date) {
 		return date.format(dateTimeFormatter);
 	}
 	

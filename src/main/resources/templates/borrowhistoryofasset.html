@@ -37,7 +37,7 @@
 					<tr>
 						<td th:text="${bh.person.name} + ' ' + ${bh.person.surname}"></td>
 						<td th:text="${bh.room.number}"></td>
-						<td th:text="${bh.borrowDate}"></td>
+						<td th:text="${#temporals.format(bh.borrowDate)}"></td>
 						<td th:text="${bh.borrowUntil}"></td>
 						<td th:text="${bh.desc}"></td>
 					</tr>

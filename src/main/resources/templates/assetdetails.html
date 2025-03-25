@@ -35,16 +35,16 @@
 				<span th:text="'Pokój ' + ${assetDetails.room.number} ?: '-'"></span><br><br>
 				
 				<label class="assetWidth">Data ostatniego wypożyczenia:</label>
-				<span th:text="${assetDetails.borrowDate} ?: '-'"></span><br>
+				<span th:text="${#temporals.format(assetDetails.borrowDate)} ?: '-'"></span><br>
 				
 				<label class="assetWidth">Data zakupu:</label>
-				<span th:text="${assetDetails.asset.assetHistory.purchaseDate}"></span><br>
+				<span th:text="${#temporals.format(assetDetails.asset.assetHistory.purchaseDate)}"></span><br>
 				
 				<label class="assetWidth">Data gwarancji:</label>
-				<span th:text="${assetDetails.asset.assetHistory.warrantyDate} ?: '-'"></span><br>
+				<span th:text="${#temporals.format(assetDetails.asset.assetHistory.warrantyDate)} ?: '-'"></span><br>
 				
 				<label class="assetWidth">Data utylizacji:</label>
-				<span th:text="${assetDetails.asset.assetHistory.disposalDate} ?: '-'"></span><br><br>
+				<span th:text="${#temporals.format(assetDetails.asset.assetHistory.disposalDate)} ?: '-'"></span><br><br>
 				
 				<a class="btn btn-success" th:href="@{/asset/}+${assetDetails.asset.id}+@{/history}">Pokaż historię wypożyczeń</a>
 				<a class="btn btn-success" id="returnAssetBtn" th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"

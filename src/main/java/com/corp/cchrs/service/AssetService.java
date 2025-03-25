@@ -1,6 +1,6 @@
 package com.corp.cchrs.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -79,7 +79,7 @@ public class AssetService {
 	public void deleteAsset(Integer id) {
 		final Asset asset = assetRepo.findById(id).orElseThrow();
 		asset.setDeleted(true);
-		asset.getAssetHistory().setDisposalDate(LocalDate.now());
+		asset.getAssetHistory().setDisposalDate(LocalDateTime.now());
 		saveAsset(asset);
 	}
 

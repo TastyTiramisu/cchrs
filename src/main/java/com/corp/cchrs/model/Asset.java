@@ -30,10 +30,10 @@ public class Asset {
 	@Column(name="note")
 	private String desc;
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="hardware_id")//, nullable=false
+    @JoinColumn(name="hardware_id", nullable=false)
     private Hardware hardware;
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="asset_history_id")//, nullable=false
+    @JoinColumn(name="asset_history_id", nullable=false)
     private AssetHistory assetHistory;
 	@Column(nullable = false)
 	private Boolean deleted = false;

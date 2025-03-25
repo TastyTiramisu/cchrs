@@ -72,11 +72,11 @@
 				<div class="form-row">
 					<div class="form-group col-sm-5">
 						<label for="purchaseDate">Data zakupu: </label>
-	  					<input class="form-control" type="date" id="purchaseDate" name="purchaseDate" th:field="*{assetHistory.purchaseDate}" required>
+	  					<input class="form-control" type="datetime-local" id="purchaseDate" name="purchaseDate" th:field="*{assetHistory.purchaseDate}" required>
 	  				</div>
 	  				<div class="form-group col-sm-5">
 						<label for="warrantyDate">*Data gwarancji: </label>
-	  					<input class="form-control" type="date" id="warrantyDate" name="warrantyDate" th:field="*{assetHistory.warrantyDate}">
+	  					<input class="form-control" type="datetime-local" id="warrantyDate" name="warrantyDate" th:field="*{assetHistory.warrantyDate}">
 	  				</div>
   				</div>
   				<br>

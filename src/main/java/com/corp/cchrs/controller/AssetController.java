@@ -1,6 +1,6 @@
 package com.corp.cchrs.controller;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -56,13 +56,11 @@ public class AssetController {
 		return "redirect:/assets";
 	}
 
-	//https://www.quora.com/Why-is-it-required-to-add-CSS-and-JS-libraries-for-Bootstrap
-	//https://getbootstrap.com/docs/4.3/getting-started/introduction/
-	// https://www.baeldung.com/spring-requestparam-vs-pathvariable
 	@GetMapping("/assets")
 	public String getFilteredAssetsTable(Model model, @RequestParam(required = false) Integer group,
 			@RequestParam(required = false) Integer type) throws Exception {
 		
+		//Asset types. User may want to filter assets by group of them or specific type of asset.
 		model.addAttribute("hardwareGroups", Utils.getFormattedNames(EHardwareGroup.values()));
 		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
 		model.addAttribute("hardwareType1", Utils.getFormattedNames(hService.getTypesByGroup(1)));
@@ -77,7 +75,6 @@ public class AssetController {
 		return "showassets";
 	}
 	
-	//filter assets by person and, of course, by hardware type and group.
 	@GetMapping("/my/assets")
 	public String getLoggedInPersonsAssets(Model model, @RequestParam(required = false) Integer group,
 			@RequestParam(required = false) Integer type) throws Exception {
@@ -85,7 +82,6 @@ public class AssetController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Person person = pService.getPersonByEmail(auth.getName());
 		
-		//names of types for our custom search bar.
 		model.addAttribute("hardwareGroups", Utils.getFormattedNames(EHardwareGroup.values()));
 		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
 		model.addAttribute("hardwareType1", Utils.getFormattedNames(hService.getTypesByGroup(1)));
@@ -101,12 +97,10 @@ public class AssetController {
 		return "showassets";
 	}
 	
-	//filter assets by person and, of course, by hardware type and group.
 	@GetMapping("/assets/person/{id}")
 	public String getPersonsAssets(Model model, @Valid @PathVariable Integer id,
 			@RequestParam(required = false) Integer group, @RequestParam(required = false) Integer type) throws Exception {
 		
-		//names of types for our custom search bar.
 		model.addAttribute("hardwareGroups", Utils.getFormattedNames(EHardwareGroup.values()));
 		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
 		model.addAttribute("hardwareType1", Utils.getFormattedNames(hService.getTypesByGroup(1)));
@@ -143,7 +137,7 @@ public class AssetController {
 	@GetMapping("/asset/add")
 	public String createAsset(Model model) {
 		model.addAttribute("asset", new Asset());
-		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes())); //if 0 throw Exception (is this necessary?), if null
+		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
 		model.addAttribute("people", pService.getPeople());
 		model.addAttribute("rooms", rService.getRooms());
 		model.addAttribute("assetHistory", new AssetHistory());
@@ -153,8 +147,8 @@ public class AssetController {
 
 	@PostMapping("/assets")
 	public String saveAsset(@Valid Asset asset,
-			@RequestParam("assetHistory.purchaseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate purchaseDate,
-			@RequestParam(value = "assetHistory.warrantyDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate warrantyDate,
+			@RequestParam("assetHistory.purchaseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime purchaseDate,
+			@RequestParam(value = "assetHistory.warrantyDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime warrantyDate,
 			@RequestParam @Valid String type,
 			@RequestParam @Valid Person person,
 			@RequestParam @Valid Room room) {
@@ -172,13 +166,13 @@ public class AssetController {
 		borrowHistory.setPerson(person);
 		borrowHistory.setRoom(room);
 		borrowHistory.setAsset(asset);
-		borrowHistory.setBorrowDate(LocalDate.now());
+		borrowHistory.setBorrowDate(LocalDateTime.now());
 		bHService.saveBorrowHistory(borrowHistory);
 		
 		return "redirect:/assets";
 	}
 
-	//should only change boolean deleted as true.
+	//Asset won't be deleted physically, method only change boolean 'deleted' to true.
 	@GetMapping("asset/delete/{id}")
 	public String deleteAsset(@Valid @PathVariable Integer id) {
 		service.deleteAsset(id);
@@ -195,10 +189,11 @@ public class AssetController {
 	}
 
 	@PostMapping("asset/edit/{id}")
-	public String updateAsset(@Valid @PathVariable Integer id, @Valid Asset asset, 
-			@RequestParam("assetHistory.purchaseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate purchaseDate,
-			@RequestParam(value = "assetHistory.warrantyDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate warrantyDate) {
+	public String updateAsset(@Valid @PathVariable Integer id, @Valid Asset asset, String hardwareType,
+			@RequestParam("assetHistory.purchaseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime purchaseDate,
+			@RequestParam(value = "assetHistory.warrantyDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime warrantyDate) {
 		asset.setId(id);
+		asset.setHardware(hService.getHardwareByType(Utils.getOriginalName(hardwareType)));
 		AssetHistory assetHistory = asset.getAssetHistory();
 		assetHistory.setPurchaseDate(purchaseDate);
 		assetHistory.setWarrantyDate(warrantyDate);

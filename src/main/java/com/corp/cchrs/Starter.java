@@ -1,6 +1,6 @@
 package com.corp.cchrs;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ public class Starter implements ApplicationRunner {
 	
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		//loadData();
+		loadData();
 	}
 	
 	@SuppressWarnings("unused")
@@ -175,7 +175,7 @@ public class Starter implements ApplicationRunner {
 		
 		room = new Room();
 		room.setNumber(20);
-		room.setType("STOREHOUSE");
+		room.setType("STORAGE");
 		rRepo.save(room);
 	}
 
@@ -313,8 +313,8 @@ public class Starter implements ApplicationRunner {
 		asset.setDesc("Komputer OptiPlex Dell OptiPlex 5060 Intel Core i5-8500T 8 GB 240 GB SSD Windows 10 Pro");
 		
 		AssetHistory assetHistory = new AssetHistory();
-		assetHistory.setPurchaseDate(LocalDate.of(2021, 6, 10));
-		assetHistory.setWarrantyDate(LocalDate.of(2022, 5, 30));
+		assetHistory.setPurchaseDate(LocalDateTime.of(2021, 6, 10, 0, 0, 0));
+		assetHistory.setWarrantyDate(LocalDateTime.of(2022, 5, 30, 0, 0, 0));
 		asset.setAssetHistory(assetHistory);
 		aHRepo.save(assetHistory);
 		hRepo.save(hardware);
@@ -328,7 +328,7 @@ public class Starter implements ApplicationRunner {
 		asset.setDesc("Komputer Dell OptiPlex 790 DT Intel Core i5-2500 8 GB 240 GB SSD Windows 10 Home");
 		
 		assetHistory = new AssetHistory();
-		assetHistory.setPurchaseDate(LocalDate.of(2021, 6, 10));
+		assetHistory.setPurchaseDate(LocalDateTime.of(2021, 6, 10, 0, 0, 0));
 		asset.setAssetHistory(assetHistory);
 		aHRepo.save(assetHistory);
 		hRepo.save(hardware);
@@ -342,21 +342,20 @@ public class Starter implements ApplicationRunner {
 		asset.setDesc("Mysz komputerowa MICROSOFT Bluetooth Mobile Mouse 3600 - PN7-00023");
 		
 		assetHistory = new AssetHistory();
-		assetHistory.setPurchaseDate(LocalDate.of(2021, 6, 10));
-		assetHistory.setWarrantyDate(LocalDate.of(2022, 5, 30));
+		assetHistory.setPurchaseDate(LocalDateTime.of(2021, 6, 10, 0, 0, 0));
+		assetHistory.setWarrantyDate(LocalDateTime.of(2022, 5, 30, 0, 0, 0));
 		asset.setAssetHistory(assetHistory);
 		aHRepo.save(assetHistory);
 		hRepo.save(hardware);
 		aRepo.save(asset);
 	}
 
-	//cały sprzęt ma przy jego dodawaniu 1 wpis w historii: kto, gdzie, borrowDate ale nie do kiedy.
 	private void addBorrowHistory() {
 		//1
 		BorrowHistory bHistory = new BorrowHistory();
-		bHistory.setBorrowDate(LocalDate.of(2023, 1, 13));
-		bHistory.setBorrowUntil(LocalDate.of(2023, 9, 1));
-		bHistory.setReturnBackDate(LocalDate.of(2023, 9, 1));
+		bHistory.setBorrowDate(LocalDateTime.of(2023, 1, 13, 0, 0, 0));
+		bHistory.setBorrowUntil(LocalDateTime.of(2023, 9, 1, 0, 0, 0));
+		bHistory.setReturnBackDate(LocalDateTime.of(2023, 9, 1, 0, 0, 0));
 		
 		Asset asset = StreamSupport.stream(aRepo.findAll().spliterator(), false)
 				.filter(a -> "PC1".equals(a.getName()))
@@ -380,8 +379,8 @@ public class Starter implements ApplicationRunner {
 		bHRepo.save(bHistory);
 		//2
 		bHistory = new BorrowHistory();
-		bHistory.setBorrowDate(LocalDate.of(2023, 1, 13));
-		bHistory.setBorrowUntil(LocalDate.of(2023, 9, 1));
+		bHistory.setBorrowDate(LocalDateTime.of(2023, 1, 13, 0, 0, 0));
+		bHistory.setBorrowUntil(LocalDateTime.of(2023, 9, 1, 0, 0, 0));
 		
 		asset = StreamSupport.stream(aRepo.findAll().spliterator(), false)
 				.filter(a -> "PC2".equals(a.getName()))
@@ -405,7 +404,7 @@ public class Starter implements ApplicationRunner {
 		bHRepo.save(bHistory);
 		//3
 		bHistory = new BorrowHistory();
-		bHistory.setBorrowDate(LocalDate.of(2023, 1, 13));
+		bHistory.setBorrowDate(LocalDateTime.of(2023, 1, 13, 0, 0, 0));
 		
 		asset = StreamSupport.stream(aRepo.findAll().spliterator(), false)
 				.filter(a -> "myszka1".equals(a.getName()))
