@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Person {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	@OneToMany(mappedBy="person", fetch = FetchType.LAZY)
 	private Set<BorrowHistory> borrowHistories;

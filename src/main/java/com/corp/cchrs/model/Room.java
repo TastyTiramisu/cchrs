@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Room {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	@OneToMany(mappedBy="room", fetch = FetchType.LAZY)
 	private Set<BorrowHistory> borrowHistories;
