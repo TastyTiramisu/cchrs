@@ -61,7 +61,7 @@ public class BorrowHistoryController {
 	}
 	
 	@GetMapping("/asset/lend/{id}")
-	public String createBorrowHistory(@Valid @PathVariable Integer id, Model model) {
+	public String lendSomeoneAssetForm(@Valid @PathVariable Integer id, Model model) {
 		if(aService.getAsset(id).isDeleted()) {
 			model.addAttribute("status", "400");
 			model.addAttribute("error", "Bad Request");
@@ -81,16 +81,13 @@ public class BorrowHistoryController {
 	public String lendSomeoneAsset(@Valid @PathVariable Integer id, Model model,
 			BorrowHistory borrowHistory,
 			@RequestParam @Valid Person person,
-			@RequestParam @Valid Room room,
-			@RequestParam(required = false) String borrowHistoryDesc) {
+			@RequestParam @Valid Room room) {
 		borrowHistory.setId(null);
 		borrowHistory.setAsset(aService.getAsset(id));
 		borrowHistory.setPerson(person);
 		borrowHistory.setRoom(room);
-		final LocalDateTime borrowUntil = borrowHistory.getBorrowUntil();
-		if (borrowUntil != null) borrowHistory.setBorrowUntil(borrowUntil);
+
 		service.saveBorrowHistory(borrowHistory);
-		
 		model.addAttribute("assetDetails", service.getLastRecordInHistoryOfAsset(id));
 		model.addAttribute("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 		return "assetdetails";

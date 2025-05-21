@@ -30,6 +30,7 @@
 						<td scope="col">Nr. pokoju</td>
 						<td scope="col">Data wypożyczenia</td>
 						<td scope="col">Data do której należy oddać sprzęt</td>
+						<td scope="col">Oddany</td>
 						<td scope="col">Opis</td>
 					</tr>
 				</thead>
@@ -38,7 +39,8 @@
 						<td th:text="${bh.person.name} + ' ' + ${bh.person.surname}"></td>
 						<td th:text="${bh.room.number}"></td>
 						<td th:text="${#temporals.format(bh.borrowDate)}"></td>
-						<td th:text="${bh.borrowUntil}"></td>
+						<td th:text="${#temporals.format(bh.borrowUntil)}"></td>
+						<td th:text="${#temporals.format(bh.returnBackDate)} ?: 'Nie'"></td>
 						<td th:text="${bh.desc}"></td>
 					</tr>
 				</tbody>
