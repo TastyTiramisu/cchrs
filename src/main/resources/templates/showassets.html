@@ -64,13 +64,44 @@
 				</tbody>
 			</table>
 			
-			<br><br><br>
-			
 		</div>
+	
+	
+		<!-- I used pagination bar from this source https://www.bezkoder.com/thymeleaf-pagination/ -->
+		<nav id="pagination" aria-label="Pagination">
+			<ul class="pagination justify-content-center">
+				<li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+					<a th:replace="fragments/paging :: paging(1, '<<', 'Pierwsza strona')"></a>
+				</li>
+				<li class="page-item font-weight-bold" th:classappend="${currentPage == 1} ? 'disabled'">
+					<a th:replace="fragments/paging :: paging(${currentPage - 1}, 'Poprzednia', 'Poprzednia strona')"></a>
+				</li>
+				<li class="page-item disabled" th:if="${currentPage - 2 > 1}">
+					<a class="page-link" href="#">...</a>
+				</li>
+				<li class="page-item" th:classappend="${page == currentPage} ? 'active'"
+					th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+					<a th:replace="fragments/paging :: paging(${page}, ${page}, 'Page ' + ${page})"></a>
+				</li>
+				<li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
+					<a class="page-link" href="#">...</a>
+				</li>
+				<li class="page-item font-weight-bold" th:classappend="${currentPage == totalPages} ? 'disabled'">
+					<a th:replace="fragments/paging :: paging(${currentPage + 1},'Następna', 'Następna strona')"></a>
+				</li>
+				<li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+					<a th:replace="fragments/paging :: paging(${totalPages}, '>>', 'Ostatnia strona')"></a>
+				</li>
+			</ul>
+		</nav>
 	</div>
 	
 	<div id="footer">Copyright © 2022 Corp. All rights reserved.</div>
 	<script th:inline="javascript">
+		function getCurrUrl(){
+			return window.location.href.split('?')[0];
+		}
+		
 		function changeTypeList(){
 			var group = document.getElementById("group");
 			var type = document.getElementById("type");
@@ -85,19 +116,34 @@
 			type.innerHTML = '<option value="0">all types</option>';
 			switch (Number(group.value)) {
 			  case 1:
-			    for(var i in h1) type.innerHTML += '<option value="' + (+i+1) + '">' + h1[i] + '</option>';
+			    for(var i in all){ 
+			    	if(h1.indexOf(all[i]) === -1) type.innerHTML += '<option value="' + (+i+1) + '" hidden="true">' + all[i] + '</option>';
+				    else type.innerHTML += '<option value="' + (+i+1) + '">' + all[i] + '</option>';
+				}
 			    break;
 			  case 2:
-			    for(var i in h2) type.innerHTML += '<option value="' + (+i+1) + '">' + h2[i] + '</option>';
+			    for(var i in all){ 
+			    	if(h2.indexOf(all[i]) === -1) type.innerHTML += '<option value="' + (+i+1) + '" hidden="true">' + all[i] + '</option>';
+				    else type.innerHTML += '<option value="' + (+i+1) + '">' + all[i] + '</option>';
+				}
 			    break;
 			  case 3:
-			    for(var i in h3) type.innerHTML += '<option value="' + (+i+1) + '">' + h3[i] + '</option>';
+			    for(var i in all){ 
+			    	if(h3.indexOf(all[i]) === -1) type.innerHTML += '<option value="' + (+i+1) + '" hidden="true">' + all[i] + '</option>';
+				    else type.innerHTML += '<option value="' + (+i+1) + '">' + all[i] + '</option>';
+				}
 			    break;
 			  case 4:
-			    for(var i in h4) type.innerHTML += '<option value="' + (+i+1) + '">' + h4[i] + '</option>';
+			    for(var i in all){ 
+			    	if(h4.indexOf(all[i]) === -1) type.innerHTML += '<option value="' + (+i+1) + '" hidden="true">' + all[i] + '</option>';
+				    else type.innerHTML += '<option value="' + (+i+1) + '">' + all[i] + '</option>';
+				}
 			    break;
 			  case 5:
-			    for(var i in h5) type.innerHTML += '<option value="' + (+i+1) + '">' + h5[i] + '</option>';
+			    for(var i in all){ 
+			    	if(h5.indexOf(all[i]) === -1) type.innerHTML += '<option value="' + (+i+1) + '" hidden="true">' + all[i] + '</option>';
+				    else type.innerHTML += '<option value="' + (+i+1) + '">' + all[i] + '</option>';
+				}
 			    break;
 			  default:
 			    for(var i in all) type.innerHTML += '<option value="' + (+i+1) + '">' + all[i] + '</option>';

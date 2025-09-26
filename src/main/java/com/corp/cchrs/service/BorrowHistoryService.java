@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.corp.cchrs.model.Asset;
@@ -62,4 +64,19 @@ public class BorrowHistoryService {
 				.filter(bh -> assetId.equals(bh.getAsset().getId()))
 				.toList();
 	}
+	
+	public Page<Asset> getAssets(Integer personId, Integer type, Integer group, Pageable paging) {
+		//TODO
+		repo.findByPersonId(personId, paging);
+		return assetService.findByGroupAndType(type, group, paging);
+	}
+	
+	/*
+	public Page<Asset> getAssets(Integer personId, Integer type, Integer group, Pageable paging) {
+		if(group == null || type == null) return repo.findByPersonId(personId, paging);
+		if(group == 0 && type == 0) return repo.findByPersonId(personId, paging);
+		if(group == 0) return repo.findByPersonIdAndAssetHardwareId(personId, type, paging);
+		if(type == 0) return repo.findByPersonIdAndAssetHardwareHardwareGroupId(personId, group, paging);
+		return repo.findByPersonIdAndAssetHardwareIdAndAssetHardwareHardwareGroupId(personId, type, group, paging);
+	}*/
 }

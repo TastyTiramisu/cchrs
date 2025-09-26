@@ -1,0 +1,9 @@
+<a th:fragment="paging(pageNum, label, desc)" class="page-link"
+	th:href="@{'/assets?' 
+	+ ${group!=null && group!=''? 'group=' + group + '&' : ''}
+	+ ${type!=null && type!=''? 'type=' + type + '&' : ''}
+	+ 'page=' + ${pageNum - 1}}" 
+	
+	th:title="${desc}" rel="desc">
+	[[${label}]]
+</a>

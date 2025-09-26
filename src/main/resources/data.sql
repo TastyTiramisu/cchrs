@@ -33,7 +33,11 @@ INSERT INTO asset_history(id, purchase_date, warranty_date, disposal_date) VALUE
 INSERT INTO asset(id, asset_name, note, uuid, serial_number, deleted, asset_history_id, hardware_id) VALUES 
 (1, "PC1", "Komputer OptiPlex Dell OptiPlex 5060 Intel Core i5-8500T 8 GB 240 GB SSD Windows 10 Pro", UUID(), "TKMU7PM241477230058925", 0, 1, 1),
 (2, "PC2", "Komputer Dell OptiPlex 790 DT Intel Core i5-2500 8 GB 240 GB SSD Windows 10 Home", UUID(), "TEDB-8-LF-818387054947576", 0, 2, 1),
-(3, "myszka1", "Mysz komputerowa MICROSOFT Bluetooth Mobile Mouse 3600 - PN7-00023", UUID(), "UGLL-8-YX-108463001059070", 0, 3, 5);
+(3, "myszka1", "Mysz komputerowa MICROSOFT Bluetooth Mobile Mouse 3600 - PN7-00023", UUID(), "UGLL-8-YX-108463001059070", 0, 3, 5),
+(4, "myszka2", "Mysz komputerowa MICROSOFT Bluetooth Mobile Mouse 3600 - PN7-00023", UUID(), "UGLL-8-YX-108463001059071", 0, 3, 5),
+(5, "myszka3", "Mysz komputerowa MICROSOFT Bluetooth Mobile Mouse 3600 - PN7-00023", UUID(), "UGLL-8-YX-108463001059072", 0, 3, 5),
+(6, "myszka4", "Mysz komputerowa MICROSOFT Bluetooth Mobile Mouse 3600 - PN7-00023", UUID(), "UGLL-8-YX-108463001059073", 0, 3, 5),
+(7, "myszka5", "Mysz komputerowa MICROSOFT Bluetooth Mobile Mouse 3600 - PN7-00023", UUID(), "UGLL-8-YX-108463001059074", 0, 3, 5);
 
 -- Using BCrypt hashes.
 INSERT INTO person(id, name, surname, email, role, enabled, password) VALUES 

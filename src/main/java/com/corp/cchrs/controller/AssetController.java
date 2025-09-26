@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +34,8 @@ import com.corp.cchrs.utils.Utils;
 
 @Controller
 public class AssetController {
+	
+	final public static int PAGE_SIZE = 3;
 
 	@Autowired
 	AssetService service;
@@ -55,21 +59,31 @@ public class AssetController {
 	public String redirectFromRoot() {
 		return "redirect:/assets";
 	}
+	
+	//attributes to filter assets using group and type droplist in frontend.
+	private void provideFilterOptions(Model model) {
+		EHardwareGroup[] groupsOfAssets = EHardwareGroup.values();
+		int numberOfGroups = groupsOfAssets.length;
+		
+		for(int i = 1; i < numberOfGroups + 1; i++) {
+			model.addAttribute("hardwareType" + i, Utils.getFormattedNames(hService.getTypesByGroup(i)));
+		}
+		model.addAttribute("hardwareGroups", Utils.getFormattedNames(groupsOfAssets));
+		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
+	}
 
 	@GetMapping("/assets")
-	public String getFilteredAssetsTable(Model model, @RequestParam(required = false) Integer group,
-			@RequestParam(required = false) Integer type) throws Exception {
+	public String getAssets(Model model, @RequestParam(required = false) Integer group, @RequestParam(required = false) Integer type, 
+			@RequestParam(defaultValue = "0") int page) throws Exception {  
+	    
+		provideFilterOptions(model);
+		Pageable paging = PageRequest.of(page, PAGE_SIZE);
 		
-		//Asset types. User may want to filter assets by group of them or specific type of asset.
-		model.addAttribute("hardwareGroups", Utils.getFormattedNames(EHardwareGroup.values()));
-		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
-		model.addAttribute("hardwareType1", Utils.getFormattedNames(hService.getTypesByGroup(1)));
-		model.addAttribute("hardwareType2", Utils.getFormattedNames(hService.getTypesByGroup(2)));
-		model.addAttribute("hardwareType3", Utils.getFormattedNames(hService.getTypesByGroup(3)));
-		model.addAttribute("hardwareType4", Utils.getFormattedNames(hService.getTypesByGroup(4)));
-		model.addAttribute("hardwareType5", Utils.getFormattedNames(hService.getTypesByGroup(5)));
-		
-		model.addAttribute("assets", service.getAssets(group, type, false));
+		model.addAttribute("group", group);
+		model.addAttribute("type", type);
+		model.addAttribute("currentPage", page + 1);
+		model.addAttribute("totalPages", service.findByGroupAndType(type, group, paging).getTotalPages());
+		model.addAttribute("assets", service.findByGroupAndType(type, group, paging));
 		model.addAttribute("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 		
 		return "showassets";
@@ -79,38 +93,29 @@ public class AssetController {
 	public String getLoggedInPersonsAssets(Model model, @RequestParam(required = false) Integer group,
 			@RequestParam(required = false) Integer type) throws Exception {
 		
+		provideFilterOptions(model);
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Person person = pService.getPersonByEmail(auth.getName());
 		
-		model.addAttribute("hardwareGroups", Utils.getFormattedNames(EHardwareGroup.values()));
-		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
-		model.addAttribute("hardwareType1", Utils.getFormattedNames(hService.getTypesByGroup(1)));
-		model.addAttribute("hardwareType2", Utils.getFormattedNames(hService.getTypesByGroup(2)));
-		model.addAttribute("hardwareType3", Utils.getFormattedNames(hService.getTypesByGroup(3)));
-		model.addAttribute("hardwareType4", Utils.getFormattedNames(hService.getTypesByGroup(4)));
-		model.addAttribute("hardwareType5", Utils.getFormattedNames(hService.getTypesByGroup(5)));
-		
-		final List<Asset> assetsByPerson = bHService.getAssetsByPerson(person.getId());
+		final List<Asset> assetsByPerson = bHService.getAssetsByPerson(pService.getPersonByEmail(auth.getName()).getId());
 		model.addAttribute("assets", service.getAssets(assetsByPerson, group, type));
-		model.addAttribute("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
+		model.addAttribute("role", auth.getAuthorities().toString());
 		
 		return "showassets";
 	}
-	
+
 	@GetMapping("/assets/person/{id}")
 	public String getPersonsAssets(Model model, @Valid @PathVariable Integer id,
-			@RequestParam(required = false) Integer group, @RequestParam(required = false) Integer type) throws Exception {
+			@RequestParam(required = false) Integer group, @RequestParam(required = false) Integer type, 
+			@RequestParam(defaultValue = "0") int page) throws Exception {
 		
-		model.addAttribute("hardwareGroups", Utils.getFormattedNames(EHardwareGroup.values()));
-		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
-		model.addAttribute("hardwareType1", Utils.getFormattedNames(hService.getTypesByGroup(1)));
-		model.addAttribute("hardwareType2", Utils.getFormattedNames(hService.getTypesByGroup(2)));
-		model.addAttribute("hardwareType3", Utils.getFormattedNames(hService.getTypesByGroup(3)));
-		model.addAttribute("hardwareType4", Utils.getFormattedNames(hService.getTypesByGroup(4)));
-		model.addAttribute("hardwareType5", Utils.getFormattedNames(hService.getTypesByGroup(5)));
+		provideFilterOptions(model);
+		Pageable paging = PageRequest.of(page, PAGE_SIZE);
 		
-		final List<Asset> assetsByPerson = bHService.getAssetsByPerson(id);
-		model.addAttribute("assets", service.getAssets(assetsByPerson, group, type));
+		model.addAttribute("group", group);
+		model.addAttribute("type", type);
+		model.addAttribute("currentPage", page + 1);
+		model.addAttribute("totalPages", service.findByGroupAndType(type, group, paging).getTotalPages());
+		model.addAttribute("assets", bHService.getAssets(id, group, type, paging)); //in progress
 		model.addAttribute("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 		
 		return "showassets";
@@ -120,14 +125,7 @@ public class AssetController {
 	public String getDeletedAssets(Model model, @RequestParam(required = false) Integer group,
 			@RequestParam(required = false) Integer type) throws Exception {
 		
-		model.addAttribute("hardwareGroups", Utils.getFormattedNames(EHardwareGroup.values()));
-		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
-		model.addAttribute("hardwareType1", Utils.getFormattedNames(hService.getTypesByGroup(1)));
-		model.addAttribute("hardwareType2", Utils.getFormattedNames(hService.getTypesByGroup(2)));
-		model.addAttribute("hardwareType3", Utils.getFormattedNames(hService.getTypesByGroup(3)));
-		model.addAttribute("hardwareType4", Utils.getFormattedNames(hService.getTypesByGroup(4)));
-		model.addAttribute("hardwareType5", Utils.getFormattedNames(hService.getTypesByGroup(5)));
-		
+		provideFilterOptions(model);
 		model.addAttribute("assets", service.getAssets(group, type, true));
 		model.addAttribute("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 		

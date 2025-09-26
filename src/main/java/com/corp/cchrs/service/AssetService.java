@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.corp.cchrs.model.Asset;
@@ -19,6 +21,10 @@ public class AssetService {
 	
 	@Autowired
 	HardwareService hardwareService;
+	
+	public Page<Asset> getAllAssets(Pageable pageable) {
+		return assetRepo.findAll(pageable);
+	}
 	
 	private List<Asset> getListOfAssets() {
 		List<Asset> allAssets = new ArrayList<>();
@@ -53,7 +59,7 @@ public class AssetService {
 		return assets.stream().filter(g -> g.getHardware().getType().equals(typeName))
 				.filter(g -> g.getHardware().getHardwareGroup().getId().equals(group)).toList();
 	}
-	
+		
 	public List<Asset> getAssets(List<Asset> assetsByPerson, Integer group, Integer type) throws Exception{
 		if (group == null || type == null) return assetsByPerson;
 		if (group == 0 && type == 0) return assetsByPerson;
@@ -85,5 +91,13 @@ public class AssetService {
 
 	public Asset getAsset(Integer id) {
 		return assetRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Asset with id " + id + " doesn't exist!"));
+	}
+	
+	public Page<Asset> findByGroupAndType(Integer type, Integer group, Pageable paging) {
+		if(group == null || type == null) return assetRepo.findAll(paging);
+		if(group == 0 && type == 0) return assetRepo.findAll(paging);
+		if(group == 0) return assetRepo.findByHardwareId(type, paging);
+		if(type == 0) return assetRepo.findByHardwareHardwareGroupId(group, paging);
+		return assetRepo.findByHardwareIdAndHardwareHardwareGroupId(type, group, paging);
 	}
 }
