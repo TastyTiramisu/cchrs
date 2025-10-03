@@ -57,6 +57,7 @@
 			</table>
 			
 		</div>
+		<nav th:replace="fragments/paging :: paginationBar" id="pagination" aria-label="Pagination"></nav>
 	</div>
 	
 	<div id="footer">Copyright © 2022 Corp. All rights reserved.</div>
@@ -75,19 +76,34 @@
 			type.innerHTML = '<option value="0">all types</option>';
 			switch (Number(group.value)) {
 			  case 1:
-			    for(var i in h1) type.innerHTML += '<option value="' + (+i+1) + '">' + h1[i] + '</option>';
+			    for(var i in all){ 
+			    	if(h1.indexOf(all[i]) === -1) type.innerHTML += '<option value="' + (+i+1) + '" hidden="true">' + all[i] + '</option>';
+				    else type.innerHTML += '<option value="' + (+i+1) + '">' + all[i] + '</option>';
+				}
 			    break;
 			  case 2:
-			    for(var i in h2) type.innerHTML += '<option value="' + (+i+1) + '">' + h2[i] + '</option>';
+			    for(var i in all){ 
+			    	if(h2.indexOf(all[i]) === -1) type.innerHTML += '<option value="' + (+i+1) + '" hidden="true">' + all[i] + '</option>';
+				    else type.innerHTML += '<option value="' + (+i+1) + '">' + all[i] + '</option>';
+				}
 			    break;
 			  case 3:
-			    for(var i in h3) type.innerHTML += '<option value="' + (+i+1) + '">' + h3[i] + '</option>';
+			    for(var i in all){ 
+			    	if(h3.indexOf(all[i]) === -1) type.innerHTML += '<option value="' + (+i+1) + '" hidden="true">' + all[i] + '</option>';
+				    else type.innerHTML += '<option value="' + (+i+1) + '">' + all[i] + '</option>';
+				}
 			    break;
 			  case 4:
-			    for(var i in h4) type.innerHTML += '<option value="' + (+i+1) + '">' + h4[i] + '</option>';
+			    for(var i in all){ 
+			    	if(h4.indexOf(all[i]) === -1) type.innerHTML += '<option value="' + (+i+1) + '" hidden="true">' + all[i] + '</option>';
+				    else type.innerHTML += '<option value="' + (+i+1) + '">' + all[i] + '</option>';
+				}
 			    break;
 			  case 5:
-			    for(var i in h5) type.innerHTML += '<option value="' + (+i+1) + '">' + h5[i] + '</option>';
+			    for(var i in all){ 
+			    	if(h5.indexOf(all[i]) === -1) type.innerHTML += '<option value="' + (+i+1) + '" hidden="true">' + all[i] + '</option>';
+				    else type.innerHTML += '<option value="' + (+i+1) + '">' + all[i] + '</option>';
+				}
 			    break;
 			  default:
 			    for(var i in all) type.innerHTML += '<option value="' + (+i+1) + '">' + all[i] + '</option>';

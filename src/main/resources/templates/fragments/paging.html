@@ -1,4 +1,5 @@
-<!-- I used pagination bar from this source https://www.bezkoder.com/thymeleaf-pagination/ -->
+<!-- Using pagination bar from this source https://www.bezkoder.com/thymeleaf-pagination/ -->
+<!-- I just edited the script so it work properly when totalPages == 0 -->
 
 <nav th:fragment="paginationBar" id="pagination" aria-label="Pagination">
 	<ul class="pagination justify-content-center">
@@ -12,7 +13,7 @@
 			<a class="page-link" href="#">...</a>
 		</li>
 		<li class="page-item" th:classappend="${page == currentPage} ? 'active'"
-			th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+			th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : (totalPages == 0) ? 1 : totalPages)}">
 			<a th:replace="fragments/paging :: paging(${page}, ${page}, 'Page ' + ${page})"></a>
 		</li>
 		<li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">

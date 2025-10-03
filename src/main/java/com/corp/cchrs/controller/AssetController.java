@@ -96,16 +96,16 @@ public class AssetController {
 			@RequestParam(defaultValue = "0") int page) throws Exception {
 		
 		provideFilterOptions(model);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Integer personId = pService.getPersonByEmail(auth.getName()).getId();
 		
 		Pageable paging = PageRequest.of(page, PAGE_SIZE);
 		model.addAttribute("urlPath", "/my/assets");
 		model.addAttribute("group", group);
 		model.addAttribute("type", type);
 		model.addAttribute("currentPage", page + 1);
-		model.addAttribute("totalPages", service.getAssets(type, group, paging).getTotalPages());
+		model.addAttribute("totalPages", service.getAssets(personId, type, group, paging).getTotalPages());
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Integer personId = pService.getPersonByEmail(auth.getName()).getId();
 		model.addAttribute("assets", service.getAssets(personId, type, group, paging));
 		model.addAttribute("role", auth.getAuthorities().toString());
 		
@@ -142,7 +142,7 @@ public class AssetController {
 		model.addAttribute("group", group);
 		model.addAttribute("type", type);
 		model.addAttribute("currentPage", page + 1);
-		model.addAttribute("totalPages", service.getAssets(type, group, paging).getTotalPages());
+		model.addAttribute("totalPages", service.getDeletedAssets(type, group, paging).getTotalPages());
 		
 		model.addAttribute("assets", service.getDeletedAssets(type, group, paging));
 		model.addAttribute("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
