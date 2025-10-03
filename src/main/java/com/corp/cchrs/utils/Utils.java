@@ -66,4 +66,8 @@ public class Utils {
 			res.add(type.replace('_', ' ').toLowerCase());
 		return res;
 	}
+	
+	public static String getFormattedName(String str) {
+		return str.replace('_', ' ').toLowerCase();
+	}
 }

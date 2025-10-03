@@ -45,7 +45,8 @@
 					<label class="col-sm-2 col-form-label" for="type">Typ sprzętu komputerowego: </label>
 					<div class="col-sm-8">
 						<select class="custom-select" id="type" name="type" required>
-							<option th:each="type : ${hardwareTypes}" th:value="${type}" th:text="${type}"></option>
+							<option th:each="type : ${hardwareTypes}" th:value="${type}" th:text="${type}"
+							th:selected="${type} == ${currentType} ? true : false"></option>
 						</select>
 					</div>
 				</div>

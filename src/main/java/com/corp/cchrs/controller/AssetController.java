@@ -1,7 +1,6 @@
 package com.corp.cchrs.controller;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -77,13 +76,15 @@ public class AssetController {
 			@RequestParam(defaultValue = "0") int page) throws Exception {  
 	    
 		provideFilterOptions(model);
-		Pageable paging = PageRequest.of(page, PAGE_SIZE);
 		
+		Pageable paging = PageRequest.of(page, PAGE_SIZE);
+		model.addAttribute("urlPath", "/assets");
 		model.addAttribute("group", group);
 		model.addAttribute("type", type);
 		model.addAttribute("currentPage", page + 1);
-		model.addAttribute("totalPages", service.findByGroupAndType(type, group, paging).getTotalPages());
-		model.addAttribute("assets", service.findByGroupAndType(type, group, paging));
+		model.addAttribute("totalPages", service.getAssets(type, group, paging).getTotalPages());
+		
+		model.addAttribute("assets", service.getAssets(type, group, paging));
 		model.addAttribute("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 		
 		return "showassets";
@@ -91,13 +92,21 @@ public class AssetController {
 	
 	@GetMapping("/my/assets")
 	public String getLoggedInPersonsAssets(Model model, @RequestParam(required = false) Integer group,
-			@RequestParam(required = false) Integer type) throws Exception {
+			@RequestParam(required = false) Integer type, 
+			@RequestParam(defaultValue = "0") int page) throws Exception {
 		
 		provideFilterOptions(model);
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
-		final List<Asset> assetsByPerson = bHService.getAssetsByPerson(pService.getPersonByEmail(auth.getName()).getId());
-		model.addAttribute("assets", service.getAssets(assetsByPerson, group, type));
+		Pageable paging = PageRequest.of(page, PAGE_SIZE);
+		model.addAttribute("urlPath", "/my/assets");
+		model.addAttribute("group", group);
+		model.addAttribute("type", type);
+		model.addAttribute("currentPage", page + 1);
+		model.addAttribute("totalPages", service.getAssets(type, group, paging).getTotalPages());
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Integer personId = pService.getPersonByEmail(auth.getName()).getId();
+		model.addAttribute("assets", service.getAssets(personId, type, group, paging));
 		model.addAttribute("role", auth.getAuthorities().toString());
 		
 		return "showassets";
@@ -109,13 +118,15 @@ public class AssetController {
 			@RequestParam(defaultValue = "0") int page) throws Exception {
 		
 		provideFilterOptions(model);
-		Pageable paging = PageRequest.of(page, PAGE_SIZE);
 		
+		Pageable paging = PageRequest.of(page, PAGE_SIZE);
+		model.addAttribute("urlPath", "/assets/person/" + id);
 		model.addAttribute("group", group);
 		model.addAttribute("type", type);
 		model.addAttribute("currentPage", page + 1);
-		model.addAttribute("totalPages", service.findByGroupAndType(type, group, paging).getTotalPages());
-		model.addAttribute("assets", bHService.getAssets(id, group, type, paging)); //in progress
+		model.addAttribute("totalPages", service.getAssets(type, group, paging).getTotalPages());
+		
+		model.addAttribute("assets", service.getAssets(id, type, group, paging));
 		model.addAttribute("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 		
 		return "showassets";
@@ -123,10 +134,17 @@ public class AssetController {
 	
 	@GetMapping("/deleted/assets")
 	public String getDeletedAssets(Model model, @RequestParam(required = false) Integer group,
-			@RequestParam(required = false) Integer type) throws Exception {
+			@RequestParam(required = false) Integer type, @RequestParam(defaultValue = "0") int page) throws Exception {
 		
 		provideFilterOptions(model);
-		model.addAttribute("assets", service.getAssets(group, type, true));
+		Pageable paging = PageRequest.of(page, PAGE_SIZE);
+		model.addAttribute("urlPath", "/deleted/assets");
+		model.addAttribute("group", group);
+		model.addAttribute("type", type);
+		model.addAttribute("currentPage", page + 1);
+		model.addAttribute("totalPages", service.getAssets(type, group, paging).getTotalPages());
+		
+		model.addAttribute("assets", service.getDeletedAssets(type, group, paging));
 		model.addAttribute("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 		
 		return "showdeletedassets";
@@ -182,16 +200,18 @@ public class AssetController {
 		Asset asset = service.getAsset(id);
 		model.addAttribute("asset", asset);
 		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
+		model.addAttribute("currentType", Utils.getFormattedName(asset.getHardware().getType()));
 		model.addAttribute("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 		return "updateasset";
 	}
 
 	@PostMapping("asset/edit/{id}")
-	public String updateAsset(@Valid @PathVariable Integer id, @Valid Asset asset, String hardwareType,
+	public String updateAsset(@Valid @PathVariable Integer id, @Valid Asset asset, String type,
 			@RequestParam("assetHistory.purchaseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime purchaseDate,
 			@RequestParam(value = "assetHistory.warrantyDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime warrantyDate) {
 		asset.setId(id);
-		asset.setHardware(hService.getHardwareByType(Utils.getOriginalName(hardwareType)));
+		System.out.println("hardwareType: " + type);
+		asset.setHardware(hService.getHardwareByType(Utils.getOriginalName(type)));
 		AssetHistory assetHistory = asset.getAssetHistory();
 		assetHistory.setPurchaseDate(purchaseDate);
 		assetHistory.setWarrantyDate(warrantyDate);

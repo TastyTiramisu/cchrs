@@ -1,5 +1,34 @@
+<!-- I used pagination bar from this source https://www.bezkoder.com/thymeleaf-pagination/ -->
+
+<nav th:fragment="paginationBar" id="pagination" aria-label="Pagination">
+	<ul class="pagination justify-content-center">
+		<li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+			<a th:replace="fragments/paging :: paging(1, '<<', 'Pierwsza strona')"></a>
+		</li>
+		<li class="page-item font-weight-bold" th:classappend="${currentPage == 1} ? 'disabled'">
+			<a th:replace="fragments/paging :: paging(${currentPage - 1}, 'Poprzednia', 'Poprzednia strona')"></a>
+		</li>
+		<li class="page-item disabled" th:if="${currentPage - 2 > 1}">
+			<a class="page-link" href="#">...</a>
+		</li>
+		<li class="page-item" th:classappend="${page == currentPage} ? 'active'"
+			th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 1, currentPage + 2 < totalPages ? currentPage + 2 : totalPages)}">
+			<a th:replace="fragments/paging :: paging(${page}, ${page}, 'Page ' + ${page})"></a>
+		</li>
+		<li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
+			<a class="page-link" href="#">...</a>
+		</li>
+		<li class="page-item font-weight-bold" th:classappend="${currentPage == totalPages} ? 'disabled'">
+			<a th:replace="fragments/paging :: paging(${currentPage + 1},'Następna', 'Następna strona')"></a>
+		</li>
+		<li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+			<a th:replace="fragments/paging :: paging(${totalPages}, '>>', 'Ostatnia strona')"></a>
+		</li>
+	</ul>
+</nav>
+
 <a th:fragment="paging(pageNum, label, desc)" class="page-link"
-	th:href="@{'/assets?' 
+	th:href="@{${urlPath} + '?'
 	+ ${group!=null && group!=''? 'group=' + group + '&' : ''}
 	+ ${type!=null && type!=''? 'type=' + type + '&' : ''}
 	+ 'page=' + ${pageNum - 1}}" 
