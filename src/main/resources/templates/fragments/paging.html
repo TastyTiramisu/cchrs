@@ -19,10 +19,10 @@
 		<li class="page-item disabled" th:if="${currentPage + 2 < totalPages}">
 			<a class="page-link" href="#">...</a>
 		</li>
-		<li class="page-item font-weight-bold" th:classappend="${currentPage == totalPages} ? 'disabled'">
+		<li class="page-item font-weight-bold" th:classappend="${currentPage == totalPages || totalPages == 0} ? 'disabled'">
 			<a th:replace="fragments/paging :: paging(${currentPage + 1},'Następna', 'Następna strona')"></a>
 		</li>
-		<li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+		<li class="page-item" th:classappend="${currentPage == totalPages || totalPages == 0} ? 'disabled'">
 			<a th:replace="fragments/paging :: paging(${totalPages}, '>>', 'Ostatnia strona')"></a>
 		</li>
 	</ul>
