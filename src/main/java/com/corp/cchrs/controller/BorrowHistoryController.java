@@ -5,6 +5,10 @@ import java.time.LocalDateTime;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +27,10 @@ import com.corp.cchrs.service.PersonService;
 import com.corp.cchrs.service.RoomService;
 
 @Controller
-public class BorrowHistoryController {
+public class BorrowHistoryController extends FilterOptions {
+	
+	final public static int PAGE_SIZE = 3;
+	
 	@Autowired
 	BorrowHistoryService service;
 	
@@ -98,5 +105,28 @@ public class BorrowHistoryController {
 		model.addAttribute("historyOfAsset", service.getBorrowHistoryOfAsset(id));
 		model.addAttribute("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 		return "borrowhistoryofasset";
+	}
+	
+	@GetMapping("/my/assets")
+	public String getLoggedInPersonsAssets(Model model, @RequestParam(required = false) Integer group,
+			@RequestParam(required = false) Integer type, 
+			@RequestParam(defaultValue = "0") int page) throws Exception {
+		
+		provideFilterOptions(model);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Integer personId = pService.getPersonByEmail(auth.getName()).getId();
+		
+		Pageable paging = PageRequest.of(page, PAGE_SIZE);
+		Page<BorrowHistory> borrowHistory = service.getBorrowHistory(personId, type, group, paging);
+		model.addAttribute("urlPath", "/my/assets");
+		model.addAttribute("group", group);
+		model.addAttribute("type", type);
+		model.addAttribute("currentPage", page + 1);
+		model.addAttribute("totalPages", borrowHistory.getTotalPages());
+		
+		model.addAttribute("borrowHistory", borrowHistory);
+		model.addAttribute("role", auth.getAuthorities().toString());
+		
+		return "showpersonsassets";
 	}
 }

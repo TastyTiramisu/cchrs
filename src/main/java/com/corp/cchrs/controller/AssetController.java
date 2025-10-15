@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,27 +19,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.corp.cchrs.model.Asset;
 import com.corp.cchrs.model.AssetHistory;
 import com.corp.cchrs.model.BorrowHistory;
-import com.corp.cchrs.model.EHardwareGroup;
 import com.corp.cchrs.model.Person;
 import com.corp.cchrs.model.Room;
 import com.corp.cchrs.service.AssetHistoryService;
 import com.corp.cchrs.service.AssetService;
 import com.corp.cchrs.service.BorrowHistoryService;
-import com.corp.cchrs.service.HardwareService;
 import com.corp.cchrs.service.PersonService;
 import com.corp.cchrs.service.RoomService;
 import com.corp.cchrs.utils.Utils;
 
 @Controller
-public class AssetController {
+public class AssetController extends FilterOptions {
 	
 	final public static int PAGE_SIZE = 3;
 
 	@Autowired
 	AssetService service;
-
-	@Autowired
-	HardwareService hService;
 	
 	@Autowired
 	AssetHistoryService aHService;
@@ -54,21 +48,9 @@ public class AssetController {
 	@Autowired
 	BorrowHistoryService bHService;
 	
-	@GetMapping("/")
-	public String redirectFromRoot() {
-		return "redirect:/assets";
-	}
-	
-	//attributes to filter assets using group and type droplist in frontend.
-	private void provideFilterOptions(Model model) {
-		EHardwareGroup[] groupsOfAssets = EHardwareGroup.values();
-		int numberOfGroups = groupsOfAssets.length;
-		
-		for(int i = 1; i < numberOfGroups + 1; i++) {
-			model.addAttribute("hardwareType" + i, Utils.getFormattedNames(hService.getTypesByGroup(i)));
-		}
-		model.addAttribute("hardwareGroups", Utils.getFormattedNames(groupsOfAssets));
-		model.addAttribute("hardwareTypes", Utils.getFormattedNames(hService.getAllTypes()));
+	@GetMapping("/ser2")
+	public String genSerNumWithDashes() {
+		return Utils.generateSerialNumberWithDashes();
 	}
 
 	@GetMapping("/assets")
@@ -86,28 +68,6 @@ public class AssetController {
 		
 		model.addAttribute("assets", service.getAssets(type, group, paging));
 		model.addAttribute("role", SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
-		
-		return "showassets";
-	}
-	
-	@GetMapping("/my/assets")
-	public String getLoggedInPersonsAssets(Model model, @RequestParam(required = false) Integer group,
-			@RequestParam(required = false) Integer type, 
-			@RequestParam(defaultValue = "0") int page) throws Exception {
-		
-		provideFilterOptions(model);
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Integer personId = pService.getPersonByEmail(auth.getName()).getId();
-		
-		Pageable paging = PageRequest.of(page, PAGE_SIZE);
-		model.addAttribute("urlPath", "/my/assets");
-		model.addAttribute("group", group);
-		model.addAttribute("type", type);
-		model.addAttribute("currentPage", page + 1);
-		model.addAttribute("totalPages", service.getAssets(personId, type, group, paging).getTotalPages());
-		
-		model.addAttribute("assets", service.getAssets(personId, type, group, paging));
-		model.addAttribute("role", auth.getAuthorities().toString());
 		
 		return "showassets";
 	}

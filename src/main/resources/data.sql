@@ -59,7 +59,7 @@ INSERT INTO room(id, number, type, deleted) VALUES
 (8, 20, "OFFICE", 0);
 
 INSERT INTO borrow_history(borrow_date, borrow_until, return_back_date, note, asset_id, person_id, room_id) VALUES 
-("2023-01-13", NULL, "2023-09-01", "Tymczasowy komputer Ady", 1, 6, 1),
+("2023-01-13", "2025-10-12", "2023-09-01", "Tymczasowy komputer Ady", 1, 6, 1),
 ("2023-01-13", NULL, NULL, NULL, 2, 4, 2),
 ("2023-01-13", NULL, NULL, NULL, 3, 4, 2);
 
